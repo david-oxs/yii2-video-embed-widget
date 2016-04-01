@@ -6,7 +6,7 @@
  * @version 1.0.0
  */
 
-namespace cics\widgets;
+namespace globaloxs\widgets;
 
 use yii\helpers\Html;
 
@@ -17,6 +17,7 @@ class VideoEmbed extends \yii\base\Widget
 	public $responsive 	= true;
 	public $container_id	= '';
 	public $container_class = '';
+    public $options;
 
     public function run()
     {
@@ -30,10 +31,14 @@ class VideoEmbed extends \yii\base\Widget
     	// look up data for the supplied url
     	$data = \Embed\Embed::create($this->url);
 
+
 	// make sure we received a video embed code from the lookup
     	if (!is_object($data) || is_null($data->code))
 		return $this->show_errors ? "Embed code could not be generated for this URL ({$this->url})" : false;
-
+        foreach ($this->options as $option=>$value) {
+          // Sets the fame with custom options...
+          $data->$option=$value;
+        }
 	// build the video container with custom id and class if desired
 	$custom_container = !empty($this->container_id) || !empty($this->container_class);
 	$video_embed = $custom_container ? '<div id="' . $this->container_id . '" class="' . $this->container_class . '">' : '';
